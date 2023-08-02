@@ -46,7 +46,7 @@
 #include <memory>
 // #include <mutex>
 #include <random>
-#include <thread>
+// #include <thread>
 
 // #define FIXED_SEED // if defined, then uses a fixed seed number for
 // reproducible results during debug. Use only one OMP thread to ensure
@@ -119,12 +119,15 @@ public:
                 // recycled every 4.3 seconds
                 initKey[0] = std::chrono::high_resolution_clock::now().time_since_epoch().count();
                 // A thread id is often close to being random (on most systems)
-                initKey[1] = std::hash<std::thread::id>{}(std::this_thread::get_id());
+                // initKey[1] = std::hash<std::thread::id>{}(std::this_thread::get_id());
+                std::random_device rd;
+                initKey[1] = std::hash<std::uint32_t>{}(rd());
                     // On a 64-bit machine, the thread id is 64 bits long
                     // skip on 32-bit arm architectures
     #if !defined(__arm__) && !defined(__EMSCRIPTEN__)
                 if (sizeof(size_t) == 8)
-                    initKey[2] = (std::hash<std::thread::id>{}(std::this_thread::get_id()) >> 32);
+                    // initKey[2] = (std::hash<std::thread::id>{}(std::this_thread::get_id()) >> 32);
+                    initKey[2] = (std::hash<std::uint32_t>{}(rd()) >> 32);
     #endif
 
                 // heap variable; we are going to use the least 32 bits of its memory

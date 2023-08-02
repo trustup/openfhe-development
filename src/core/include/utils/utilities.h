@@ -114,7 +114,7 @@ inline constexpr int64_t Max64BitValue() {
 
 // TODO (dsuponit): the name of this function is64BitOverflow() is misleading as it checks if double can be
 // converted to int64_t. The name should reflect that. Something like isConvertableToInt64(). The function must be renamed!!!
-inline constexpr bool is64BitOverflow(double d) {
+inline bool is64BitOverflow(double d) {
     return std::abs(d) > static_cast<double>(Max64BitValue());
 }
 
@@ -130,7 +130,7 @@ inline constexpr bool is128BitOverflow(double d) {
 enum { MAX_DOUBLE_PRECISION = 52 };
 #endif
 
-inline constexpr bool isConvertableToNativeInt(double d) {
+inline bool isConvertableToNativeInt(double d) {
     if constexpr (NATIVEINT == 32)
         return std::abs(d) <= static_cast<double>(std::numeric_limits<int32_t>::max());
     if constexpr (NATIVEINT == 64)

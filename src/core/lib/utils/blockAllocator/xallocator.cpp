@@ -36,8 +36,8 @@
 #include <cassert>
 #include <cstring>  // for memcpy consider changing to copy
 #include <iostream>
-#include <mutex>
-#include <thread>
+// #include <mutex>
+// #include <thread>
 
 #include "utils/blockAllocator/blockAllocator.h"
 #include "utils/blockAllocator/xallocator.h"
@@ -49,7 +49,7 @@
 
 // static CRITICAL_SECTION _criticalSection;
 
-static std::mutex xalloc_mutex;
+// static std::mutex xalloc_mutex;
 
 static bool _xallocInitialized = false;
 
@@ -291,7 +291,7 @@ extern "C" void xalloc_init() {
 /// ~XallocInitDestroy destructor calls this function automatically.
 extern "C" void xalloc_destroy() {
     lock_get();
-    std::unique_lock<std::mutex> lock(xalloc_mutex);
+    // std::unique_lock<std::mutex> lock(xalloc_mutex);
     {
 #ifdef STATIC_POOLS
         for (usint i = 0; i < MAX_ALLOCATORS; i++) {
@@ -365,7 +365,7 @@ extern "C" void* xmalloc(size_t size) {
     Allocator* allocator;
     void* blockMemoryPtr;
     lock_get();
-    std::unique_lock<std::mutex> lock(xalloc_mutex);
+    // std::unique_lock<std::mutex> lock(xalloc_mutex);
     {
         // Allocate a raw memory block
         allocator      = xallocator_get_allocator(size);
@@ -396,7 +396,7 @@ extern "C" void xfree(void* ptr) {
     void* blockPtr = get_block_ptr(ptr);
 
     lock_get();
-    std::unique_lock<std::mutex> lock(xalloc_mutex);
+    // std::unique_lock<std::mutex> lock(xalloc_mutex);
     {
         // Deallocate the block
         allocator->Deallocate(blockPtr);
@@ -440,7 +440,7 @@ extern "C" void* xrealloc(void* oldMem, size_t size) {
 /// Output xallocator usage statistics
 extern "C" void xalloc_stats() {
     lock_get();
-    std::unique_lock<std::mutex> lock(xalloc_mutex);
+    // std::unique_lock<std::mutex> lock(xalloc_mutex);
     {
 #ifdef STATIC_POOLS
         std::cout << " Static Pools " << std::endl;

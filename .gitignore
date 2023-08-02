@@ -6,6 +6,9 @@
 bin/
 build*/
 cmake-build-debug
+clangbuild/
+embuild/
+test_build_clang/
 docs/doxygen
 docs/sphinx
 _build/

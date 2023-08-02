@@ -1951,7 +1951,7 @@ private:
         wres   = wa * wb;  // should give us 128 bits  of 64 * 64
         res.hi = (uint64_t)(wres >> 64);
         res.lo = (uint64_t)wres;
-#elif defined(__EMSCRIPTEN__)  // web assembly
+#elif defined(__EMSCRIPTEN__) || defined(__wasi__) // web assembly
         U64BITS a1 = a >> 32;
         U64BITS a2 = (uint32_t)a;
         U64BITS b1 = b >> 32;

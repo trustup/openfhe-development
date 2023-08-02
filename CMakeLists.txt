@@ -18,8 +18,8 @@ endif()
 ### To use gcc/g++ on a Macintosh, you must set the Compilers
 ### here, not inside the project
 ##if(APPLE)
-##       set(CMAKE_C_COMPILER "/usr/local/bin/gcc-10")
-##       set(CMAKE_CXX_COMPILER "/usr/local/bin/g++-10")
+set(CMAKE_C_COMPILER "/opt/wasi-sdk/bin/clang++")
+set(CMAKE_CXX_COMPILER "/opt/wasi-sdk/bin/clang++")
 ##endif()
 ### TODO: for now, we use CLang for Mac
 
@@ -59,6 +59,17 @@ if ( EMSCRIPTEN )
     option( BUILD_BENCHMARKS "Set to ON to build benchmarks for the library"         OFF )
     set(WITH_OPENMP OFF)
     message( "OpenMP is not supported by Emscripten" )
+elseif ( CLANG++ )
+    set(BUILD_SHARED OFF)
+    set(BUILD_STATIC ON)
+    add_compile_definitions(__EMSCRIPTEN__)
+    message( "Shared library is not supported by CLANG++")
+    option( BUILD_STATIC "Set to ON to build static versions of the library"         ON  )
+    option( BUILD_UNITTESTS "Set to ON to build unit tests for the library"          OFF )
+    option( BUILD_EXAMPLES "Set to ON to build examples for the library"             OFF )
+    option( BUILD_BENCHMARKS "Set to ON to build benchmarks for the library"         OFF )
+    set(WITH_OPENMP OFF)
+    message( "OpenMP is not supported by CLANG++" )
 else()
     option( BUILD_SHARED "Set to ON to build shared versions of the library"         ON  )
     option( BUILD_STATIC "Set to ON to build static versions of the library"         OFF )
@@ -248,7 +259,9 @@ add_custom_command(
 # Machine-specific checks
 #--------------------------------------------------------------------
 # determine the architecture on a Linux/Unix/macOS/MinGW system
-if(CMAKE_HOST_UNIX OR MINGW)
+if(CLANG++)
+    set(ARCHITECTURE "wasm32-wasi")
+elseif(CMAKE_HOST_UNIX OR MINGW)
     EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
 else()
     set(ARCHITECTURE "unknown")
