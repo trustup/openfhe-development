@@ -18,8 +18,8 @@ endif()
 ### To use gcc/g++ on a Macintosh, you must set the Compilers
 ### here, not inside the project
 ##if(APPLE)
-set(CMAKE_C_COMPILER "/opt/wasi-sdk/bin/clang++")
-set(CMAKE_CXX_COMPILER "/opt/wasi-sdk/bin/clang++")
+# set(CMAKE_C_COMPILER "/opt/wasi-sdk/bin/clang")
+# set(CMAKE_CXX_COMPILER "/opt/wasi-sdk/bin/clang++")
 ##endif()
 ### TODO: for now, we use CLang for Mac
 
@@ -60,9 +60,11 @@ if ( EMSCRIPTEN )
     set(WITH_OPENMP OFF)
     message( "OpenMP is not supported by Emscripten" )
 elseif ( CLANG++ )
+    set(CMAKE_C_COMPILER "/opt/wasi-sdk/bin/clang")
+    set(CMAKE_CXX_COMPILER "/opt/wasi-sdk/bin/clang++")
     set(BUILD_SHARED OFF)
     set(BUILD_STATIC ON)
-    add_compile_definitions(__EMSCRIPTEN__)
+    add_compile_definitions(__wasi__)
     message( "Shared library is not supported by CLANG++")
     option( BUILD_STATIC "Set to ON to build static versions of the library"         ON  )
     option( BUILD_UNITTESTS "Set to ON to build unit tests for the library"          OFF )
